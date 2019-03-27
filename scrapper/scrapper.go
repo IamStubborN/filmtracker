@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/IamStubborN/filmtracker/database"
+
 	"github.com/IamStubborN/filmtracker/tmdb"
 
 	"github.com/gocolly/colly"
@@ -40,6 +42,8 @@ type (
 		sync.RWMutex
 	}
 )
+
+var db *database.Database
 
 // createScrapper func
 func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error) {
@@ -77,6 +81,7 @@ func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error)
 		return nil, err
 	}
 	scrapper.listUA = list
+	db = database.GetDB()
 	return &scrapper, nil
 }
 
@@ -84,7 +89,6 @@ func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error)
 func (scrapper *Scrapper) ChangeUAWithTimeout(changingTimeout time.Duration) {
 	rand.Seed(time.Now().Unix())
 	for range time.NewTicker(time.Duration(changingTimeout * time.Minute)).C {
-		fmt.Println(123)
 		scrapper.mainCollector.UserAgent = scrapper.listUA[getRandomItem(len(scrapper.listUA))]
 		scrapper.tmdbCollector.UserAgent = scrapper.listUA[getRandomItem(len(scrapper.listUA))]
 		scrapper.torrentCollector.UserAgent = scrapper.listUA[getRandomItem(len(scrapper.listUA))]
@@ -255,9 +259,10 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 	})
 	scrapper.torrentCollector.OnScraped(func(response *colly.Response) {
 		if len(film.MagnetLinks) > 0 {
-			//if err = database.UpsertFilm(film); err != nil {
-			//	return
-			//}
+			fmt.Println(film)
+			if err = db.UpsertFilm(film); err != nil {
+				return
+			}
 		}
 	})
 

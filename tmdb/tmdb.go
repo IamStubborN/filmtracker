@@ -2,6 +2,7 @@ package tmdb
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -41,9 +42,10 @@ const posterBaseURL = "http://image.tmdb.org/t/p/w500"
 var movieDB *MovieDB
 
 func init() {
+
 	mdb := new(MovieDB)
 	config := tmdb.Config{
-		APIKey: "47ae333ba9e073b46eeb5790f1d00e1a",
+		APIKey: os.Getenv("TMDB_API"),
 	}
 	mdb.tmdbApi = tmdb.Init(config)
 	mdb.options = make(map[string]string)
