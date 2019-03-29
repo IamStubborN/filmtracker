@@ -2,12 +2,11 @@ package jwtmanager
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"strconv"
 	"time"
-
-	"github.com/joho/godotenv"
 
 	"github.com/dgrijalva/jwt-go"
 )

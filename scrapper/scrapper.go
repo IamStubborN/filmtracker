@@ -20,7 +20,7 @@ import (
 )
 
 // updateProxyAndUATimeout - duration timeout.
-const updateProxyAndUATimeout = 2
+const updateProxyAndUATimeout = 1
 
 type (
 	FilmTracker struct {
@@ -82,6 +82,8 @@ func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error)
 	}
 	scrapper.listUA = list
 	db = database.GetDB()
+	go scrapper.ChangeUAWithTimeout(5)
+	go scrapper.UpdateProxyAndUAListWithTimeout()
 	return &scrapper, nil
 }
 
@@ -98,16 +100,23 @@ func (scrapper *Scrapper) ChangeUAWithTimeout(changingTimeout time.Duration) {
 // UpdateProxyAndUAListWithTimeout - updating UA and Proxy's with timeout.
 // This is necessary to avoid a ban because of the many requests.
 func (scrapper *Scrapper) UpdateProxyAndUAListWithTimeout() {
-	supportCollector := scrapper.mainCollector.Clone()
-	for range time.NewTicker(time.Duration(updateProxyAndUATimeout * time.Hour)).C {
+	fmt.Println("In function")
+	supportCollector := colly.NewCollector(
+		colly.AllowedDomains("www.proxy-list.download", "www.ua-tracker.com"),
+		colly.DetectCharset(),
+		colly.AllowURLRevisit(),
+		)
+	for range time.NewTicker(time.Duration(updateProxyAndUATimeout * time.Minute)).C {
+		fmt.Println("in for range")
 		listUA, err := scrapper.getUserAgentsList(supportCollector)
 		if err != nil {
 			log.Printf("can't update useragent list")
-		} else {
-			scrapper.RLock()
-			scrapper.listUA = listUA
-			scrapper.RUnlock()
 		}
+		scrapper.RLock()
+		fmt.Println(listUA[0])
+		scrapper.listUA = listUA
+		scrapper.RUnlock()
+
 		proxyFunc, err := scrapper.getProxyFunc(supportCollector)
 		if scrapper.isUseProxy {
 			if err != nil {
@@ -116,6 +125,7 @@ func (scrapper *Scrapper) UpdateProxyAndUAListWithTimeout() {
 			scrapper.mainCollector.SetProxyFunc(proxyFunc)
 			scrapper.tmdbCollector.SetProxyFunc(proxyFunc)
 		}
+		log.Println("Proxy's changed")
 		scrapper.torrentCollector.SetProxyFunc(proxyFunc)
 	}
 }

@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+
+  filmtracker:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongo
+    environment:
+      MONGO_HOST: mongo
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+#      JWT_SECRET_KEY: FUCKIT
+#      TMDB_API: 47ae333ba9e073b46eeb5790f1d00e1a
+#      LOGGER_TYPE: PRODUCTION
+#      DB_NAME: filmtracker
+#      ACCESS_TOKEN_LIFE: 30
+#      REFRESH_TOKEN_LIFE: 24
