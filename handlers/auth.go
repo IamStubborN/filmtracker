@@ -33,6 +33,9 @@ func SignOut(c *gin.Context) {
 }
 
 func SignIn(c *gin.Context) {
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(http.StatusNoContent)
+	}
 	userFromCtx, err := getUserFromContext(c)
 	if err != nil {
 		RespondWithError(c, http.StatusNotAcceptable, err.Error())
@@ -72,6 +75,9 @@ func SignIn(c *gin.Context) {
 }
 
 func SignUp(c *gin.Context) {
+	if c.Request.Method == "OPTIONS" {
+		c.AbortWithStatus(http.StatusNoContent)
+	}
 	user, err := getUserFromContext(c)
 	if err != nil {
 		RespondWithError(c, http.StatusNotAcceptable, err.Error())
