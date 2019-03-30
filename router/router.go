@@ -11,8 +11,12 @@ func CreateRouter() *gin.Engine {
 	router.Use(
 		gin.Recovery(),
 		middlewares.XSSMiddle(),
-		cors.Default(),
-	)
+		cors.New(cors.Config{
+			AllowOrigins:     []string{"*"},
+			AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+			AllowHeaders:     []string{"*"},
+			AllowCredentials: true,
+		}))
 	AddV1RouterGroup(router)
 	AddAuthRouterGroup(router)
 	return router
