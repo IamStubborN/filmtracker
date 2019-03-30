@@ -15,12 +15,12 @@ var db = database.GetDB()
 func SignOut(c *gin.Context) {
 	accessToken, err := c.Request.Cookie("Token")
 	if err != nil {
-		RespondWithError(c, http.StatusAccepted, err)
+		RespondWithError(c, http.StatusNotAcceptable, err)
 		return
 	}
 	refreshToken, err := c.Request.Cookie("Refresh")
 	if err != nil {
-		RespondWithError(c, http.StatusAccepted, err)
+		RespondWithError(c, http.StatusNotAcceptable, err)
 		return
 	}
 	jmg.AddTokenToBlackList(accessToken.Value)
@@ -35,10 +35,12 @@ func SignOut(c *gin.Context) {
 func SignIn(c *gin.Context) {
 	if c.Request.Method == "OPTIONS" {
 		c.AbortWithStatus(http.StatusNoContent)
+		return
 	}
 	userFromCtx, err := getUserFromContext(c)
 	if err != nil {
 		RespondWithError(c, http.StatusNotAcceptable, err.Error())
+		return
 	}
 	userExist, err := db.IsExistUser(userFromCtx.Login)
 	if err != nil {
@@ -69,8 +71,10 @@ func SignIn(c *gin.Context) {
 		}
 		InsertTokensToCookie(c, accessToken, refreshToken, accessExp, refreshExp)
 		RespondWithSuccess(c, http.StatusOK, "Sign in")
+		return
 	} else {
 		RespondWithError(c, http.StatusNotAcceptable, "this user isn't in the database.")
+		return
 	}
 }
 

@@ -49,7 +49,6 @@ func init() {
 	jmg = jwtmanager.GetJWTManager()
 	mdb = tmdb.GetMovieDB()
 	session, err := mgo.Dial(os.Getenv("MONGO_HOST"))
-	session.SetSafe(&mgo.Safe{})
 	if err != nil {
 		panic(err)
 	}
@@ -151,6 +150,7 @@ func (database *Database) getFilmsByFilter(filter *filter) ([]*tmdb.Film, error)
 		}
 		pageID = page
 	}
+	fmt.Println(filter.Genre)
 	q := database.Films.Find(
 		bson.M{
 			"$or": []bson.M{
@@ -158,13 +158,15 @@ func (database *Database) getFilmsByFilter(filter *filter) ([]*tmdb.Film, error)
 				{"original_name": bson.M{"$regex": filter.Name, "$options": "i"}},
 			},
 			"release_date": bson.M{"$regex": filter.Year},
-			"genres":       bson.M{"$regex": filter.Genre}}).
+			"genres":       bson.M{"$elemMatch": bson.M{"russian_name": bson.M{"$regex": filter.Genre, "$options": "i"}}}}).
 		Sort("-release_date").
 		Limit(20)
 	q = q.Skip((pageID - 1) * 20)
+
 	if err := q.All(&films); err != nil {
 		return nil, err
 	}
+	fmt.Println(films)
 	if len(films) <= 0 {
 		return nil, fmt.Errorf("no films matches")
 	}

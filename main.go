@@ -41,7 +41,7 @@ func init() {
 }
 
 func main() {
-	go updateFilmsDatabase(false)
+	//go updateFilmsDatabase(false)
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)

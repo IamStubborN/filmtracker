@@ -12,8 +12,9 @@ func CreateRouter() *gin.Engine {
 		gin.Recovery(),
 		middlewares.XSSMiddle(),
 		cors.New(cors.Config{
-			AllowOrigins:     []string{"http://filmtracker-api.com"},
-			AllowMethods:     []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
+			AllowOrigins:     []string{"http://localhost:3000"},
+			AllowHeaders:     []string{"Accept", "Content-Type"},
+			AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 			AllowCredentials: true,
 		}))
 	AddV1RouterGroup(router)

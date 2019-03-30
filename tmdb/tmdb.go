@@ -30,9 +30,9 @@ type (
 	}
 	// Genre struct is overview of all genres from tmdb.
 	Genre struct {
-		ID          int
-		EnglishName string
-		RussianName string
+		ID          int    `bson:"id" json:"id"`
+		EnglishName string `bson:"english_name" json:"english_name"`
+		RussianName string `bson:"russian_name" json:"russian_name"`
 	}
 )
 

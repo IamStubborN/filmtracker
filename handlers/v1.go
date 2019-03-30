@@ -31,17 +31,17 @@ func FetchPage(c *gin.Context) {
 	if pageQuery, ok := c.Params.Get("id"); ok {
 		pageRegexp, err := regexp.Compile(`^[1-9][0-9]{0,4}$`)
 		if err != nil {
-			RespondWithError(c, http.StatusBadRequest, "bad Page request")
+			RespondWithError(c, http.StatusBadRequest, "bad page request")
 			return
 		}
 		if pageRegexp.MatchString(pageQuery) {
-			films, err := db.GetFilmsByQuery(pageQuery)
+			films, err := db.GetFilmsByQuery(".", ".", ".", pageQuery)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println(err)
 			}
 			c.JSON(http.StatusOK, films)
 		} else {
-			RespondWithError(c, http.StatusBadRequest, "invalid Page number")
+			RespondWithError(c, http.StatusBadRequest, "invalid page number")
 		}
 	}
 }
