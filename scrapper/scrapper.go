@@ -63,6 +63,12 @@ func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error)
 		colly.AllowedDomains("rutor.info"),
 	)
 
+	//supportCollector := colly.NewCollector(
+	//	colly.AllowedDomains("www.proxy-list.download", "www.ua-tracker.com"),
+	//	colly.DetectCharset(),
+	//	colly.AllowURLRevisit(),
+	//)
+
 	scrapper.mainCollector.SetRequestTimeout(30 * time.Second)
 	scrapper.tmdbCollector = scrapper.mainCollector.Clone()
 
@@ -82,8 +88,8 @@ func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error)
 	}
 	scrapper.listUA = list
 	db = database.GetDB()
-	go scrapper.ChangeUAWithTimeout(5)
-	go scrapper.UpdateProxyAndUAListWithTimeout()
+	go scrapper.ChangeUAWithTimeout(1)
+	//go scrapper.UpdateProxyAndUAListWithTimeout(supportCollector)
 	return &scrapper, nil
 }
 
@@ -99,13 +105,8 @@ func (scrapper *Scrapper) ChangeUAWithTimeout(changingTimeout time.Duration) {
 
 // UpdateProxyAndUAListWithTimeout - updating UA and Proxy's with timeout.
 // This is necessary to avoid a ban because of the many requests.
-func (scrapper *Scrapper) UpdateProxyAndUAListWithTimeout() {
+func (scrapper *Scrapper) UpdateProxyAndUAListWithTimeout(supportCollector *colly.Collector) {
 	fmt.Println("In function")
-	supportCollector := colly.NewCollector(
-		colly.AllowedDomains("www.proxy-list.download", "www.ua-tracker.com"),
-		colly.DetectCharset(),
-		colly.AllowURLRevisit(),
-		)
 	for range time.NewTicker(time.Duration(updateProxyAndUATimeout * time.Minute)).C {
 		fmt.Println("in for range")
 		listUA, err := scrapper.getUserAgentsList(supportCollector)
@@ -113,7 +114,6 @@ func (scrapper *Scrapper) UpdateProxyAndUAListWithTimeout() {
 			log.Printf("can't update useragent list")
 		}
 		scrapper.RLock()
-		fmt.Println(listUA[0])
 		scrapper.listUA = listUA
 		scrapper.RUnlock()
 
