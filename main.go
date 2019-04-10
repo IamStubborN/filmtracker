@@ -4,9 +4,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/IamStubborN/filmtracker/scrapper"
-
 	"github.com/IamStubborN/filmtracker/gsrv"
+
+	"github.com/IamStubborN/filmtracker/scrapper"
 
 	"github.com/joho/godotenv"
 )
@@ -41,7 +41,7 @@ func init() {
 }
 
 func main() {
-	//go updateFilmsDatabase(false)
+	go updateFilmsDatabase(false)
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)

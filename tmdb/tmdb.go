@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/IamStubborN/filmtracker/youtube"
+
 	"github.com/ryanbradynd05/go-tmdb"
 )
 
@@ -18,15 +20,17 @@ type (
 	}
 	// Film is response struct.
 	Film struct {
-		ID           int               `bson:"id" json:"id"`
-		Name         string            `bson:"name" json:"name"`
-		OriginalName string            `bson:"original_name" json:"original_name"`
-		Poster       string            `bson:"poster_path" json:"poster_path"`
-		ReleaseDate  string            `bson:"release_date" json:"release_date"`
-		Genres       []*Genre          `bson:"genres" json:"genres"`
-		Overview     string            `bson:"overview" json:"overview"`
-		AddedDate    string            `bson:"added_date" json:"added_date"`
-		MagnetLinks  map[string]string `bson:"magnet_links" json:"magnet_links"`
+		ID               int               `bson:"id" json:"id"`
+		Name             string            `bson:"name" json:"name"`
+		OriginalName     string            `bson:"original_name" json:"original_name"`
+		Poster           string            `bson:"poster_path" json:"poster_path"`
+		ReleaseDate      string            `bson:"release_date" json:"release_date"`
+		Genres           []*Genre          `bson:"genres" json:"genres"`
+		Overview         string            `bson:"overview" json:"overview"`
+		AddedDate        string            `bson:"added_date" json:"added_date"`
+		YoutubeID        string            `bson:"youtube_id" json:"youtube_id"`
+		WebTorrentMagnet string            `bson:"webtorrent_magnet" json:"webtorrent_magnet"`
+		MagnetLinks      map[string]string `bson:"magnet_links" json:"magnet_links"`
 	}
 	// Genre struct is overview of all genres from tmdb.
 	Genre struct {
@@ -80,15 +84,23 @@ func (mdb *MovieDB) CreateMovieFromName(name string) (*Film, error) {
 		t.Year(), t.Month(),
 		t.Day(), t.Hour(),
 		t.Minute(), t.Second())
+	youtubeID, err := youtube.GetTrailerID(
+		searchedFilm.Title + " " +
+			strings.Split(searchedFilm.ReleaseDate, "-")[0])
+	if err != nil {
+		return nil, err
+	}
 	film := &Film{
-		ID:           searchedFilm.ID,
-		Name:         searchedFilm.Title,
-		OriginalName: searchedFilm.OriginalTitle,
-		Poster:       posterBaseURL + searchedFilm.PosterPath,
-		ReleaseDate:  searchedFilm.ReleaseDate,
-		Overview:     searchedFilm.Overview,
-		AddedDate:    formattedTime,
-		MagnetLinks:  make(map[string]string),
+		ID:               searchedFilm.ID,
+		Name:             searchedFilm.Title,
+		OriginalName:     searchedFilm.OriginalTitle,
+		Poster:           posterBaseURL + searchedFilm.PosterPath,
+		ReleaseDate:      searchedFilm.ReleaseDate,
+		Overview:         searchedFilm.Overview,
+		AddedDate:        formattedTime,
+		YoutubeID:        youtubeID,
+		WebTorrentMagnet: "",
+		MagnetLinks:      make(map[string]string),
 	}
 
 	//add Genres to film

@@ -256,6 +256,7 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 	})
 
 	re := regexp.MustCompile("TS|BDRip|HDRip|BDRemux|UHD|DVD|WEB")
+	reWebTorrent := regexp.MustCompile("WEB|HDRip")
 	scrapper.torrentCollector.OnHTML("#index tbody tr", func(e *colly.HTMLElement) {
 		name := e.Text
 		if strings.Contains(strings.ToLower(name), strings.ToLower(film.Name)) &&
@@ -265,6 +266,13 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 			name := strings.TrimSpace(a.Text())
 			link := a.Get(1).Attr[0].Val
 			film.MagnetLinks[name] = link
+			fmt.Println(reWebTorrent.MatchString(name))
+			fmt.Println(film.WebTorrentMagnet)
+			fmt.Println(name)
+			if film.WebTorrentMagnet == "" && reWebTorrent.MatchString(name) {
+				fmt.Println("12312414", link)
+				film.WebTorrentMagnet = link
+			}
 		}
 	})
 	scrapper.torrentCollector.OnScraped(func(response *colly.Response) {
