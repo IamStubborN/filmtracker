@@ -12,6 +12,7 @@ import (
 )
 
 var service *youtube.Service
+var count = 0
 
 func init() {
 	ctx := context.Background()
@@ -23,6 +24,8 @@ func init() {
 }
 
 func GetTrailerID(query string) (string, error) {
+	count++
+	fmt.Println("youtube", query)
 	// Make the API call to YouTube.
 	call := service.Search.List("id,snippet").
 		Q(query + " трейлер").
@@ -31,7 +34,7 @@ func GetTrailerID(query string) (string, error) {
 	if err != nil {
 		log.Println(err)
 	}
-
+	fmt.Println(count)
 	// Iterate through each item and add it to the correct list.
 	for _, item := range response.Items {
 		if item.Id.Kind == "youtube#video" {

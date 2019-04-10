@@ -266,11 +266,7 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 			name := strings.TrimSpace(a.Text())
 			link := a.Get(1).Attr[0].Val
 			film.MagnetLinks[name] = link
-			fmt.Println(reWebTorrent.MatchString(name))
-			fmt.Println(film.WebTorrentMagnet)
-			fmt.Println(name)
 			if film.WebTorrentMagnet == "" && reWebTorrent.MatchString(name) {
-				fmt.Println("12312414", link)
 				film.WebTorrentMagnet = link
 			}
 		}
