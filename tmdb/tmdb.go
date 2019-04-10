@@ -6,8 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/IamStubborN/filmtracker/youtube"
-
 	"github.com/ryanbradynd05/go-tmdb"
 )
 
@@ -84,23 +82,15 @@ func (mdb *MovieDB) CreateMovieFromName(name string) (*Film, error) {
 		t.Year(), t.Month(),
 		t.Day(), t.Hour(),
 		t.Minute(), t.Second())
-	youtubeID, err := youtube.GetTrailerID(
-		searchedFilm.Title + " " +
-			strings.Split(searchedFilm.ReleaseDate, "-")[0])
-	if err != nil {
-		return nil, err
-	}
 	film := &Film{
-		ID:               searchedFilm.ID,
-		Name:             searchedFilm.Title,
-		OriginalName:     searchedFilm.OriginalTitle,
-		Poster:           posterBaseURL + searchedFilm.PosterPath,
-		ReleaseDate:      searchedFilm.ReleaseDate,
-		Overview:         searchedFilm.Overview,
-		AddedDate:        formattedTime,
-		YoutubeID:        youtubeID,
-		WebTorrentMagnet: "",
-		MagnetLinks:      make(map[string]string),
+		ID:           searchedFilm.ID,
+		Name:         searchedFilm.Title,
+		OriginalName: searchedFilm.OriginalTitle,
+		Poster:       posterBaseURL + searchedFilm.PosterPath,
+		ReleaseDate:  searchedFilm.ReleaseDate,
+		Overview:     searchedFilm.Overview,
+		AddedDate:    formattedTime,
+		MagnetLinks:  make(map[string]string),
 	}
 
 	//add Genres to film

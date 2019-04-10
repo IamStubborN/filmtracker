@@ -160,8 +160,8 @@ func (database *Database) getFilmsByFilter(filter *filter) ([]*tmdb.Film, error)
 			"release_date": bson.M{"$regex": filter.Year},
 			"genres":       bson.M{"$elemMatch": bson.M{"russian_name": bson.M{"$regex": filter.Genre, "$options": "i"}}}}).
 		Sort("-release_date").
-		Limit(20)
-	q = q.Skip((pageID - 1) * 20)
+		Limit(9)
+	q = q.Skip((pageID - 1) * 9)
 
 	if err := q.All(&films); err != nil {
 		return nil, err

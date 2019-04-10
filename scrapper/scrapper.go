@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/IamStubborN/filmtracker/youtube"
+
 	"github.com/IamStubborN/filmtracker/database"
 
 	"github.com/IamStubborN/filmtracker/tmdb"
@@ -273,9 +275,15 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 	})
 	scrapper.torrentCollector.OnScraped(func(response *colly.Response) {
 		if len(film.MagnetLinks) > 0 {
+			youtubeID, err := youtube.GetTrailerID(
+				film.Name + " " + strings.Split(film.ReleaseDate, "-")[0])
+			if err != nil {
+				log.Println(err)
+			}
+			film.YoutubeID = youtubeID
 			fmt.Println(film)
 			if err = db.UpsertFilm(film); err != nil {
-				return
+				log.Println(err)
 			}
 		}
 	})
