@@ -30,7 +30,7 @@ func init() {
 }
 
 func StartSearchTrailers() {
-	for range time.NewTicker(time.Duration(2 * time.Hour)).C {
+	for range time.NewTicker(time.Duration(10 * time.Minute)).C {
 		films, err := db.GetAllFilms()
 		if err != nil {
 			log.Println(err)
