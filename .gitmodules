@@ -1,0 +1,3 @@
+[submodule "filmtracker-web"]
+	path = filmtracker-web
+	url = git@github.com:IamStubborN/filmtracker-web.git
