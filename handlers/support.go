@@ -61,24 +61,6 @@ func InsertTokensToCookie(c *gin.Context, accessToken, refreshToken string, acce
 		HttpOnly: false,
 	}
 	http.SetCookie(c.Writer, cookie)
-	//c.SetCookie(
-	//	"Token",
-	//	accessToken,
-	//	int(time.Unix(0, int64(accessToken)).Second()),
-	//	"/",
-	//	"",
-	//	false,
-	//	false,
-	//)
-	//c.SetCookie(
-	//	"Refresh",
-	//	refreshToken,
-	//	int(time.Duration(refreshTokenExp).Seconds()),
-	//	"/",
-	//	"",
-	//	false,
-	//	false,
-	//)
 }
 func ClearCookie(c *gin.Context) {
 	cookie := &http.Cookie{
@@ -99,22 +81,4 @@ func ClearCookie(c *gin.Context) {
 		HttpOnly: false,
 	}
 	http.SetCookie(c.Writer, cookie)
-	//c.SetCookie(
-	//	"Token",
-	//	"",
-	//	-1,
-	//	"/",
-	//	"",
-	//	false,
-	//	false,
-	//)
-	//c.SetCookie(
-	//	"Refresh",
-	//	"",
-	//	-1,
-	//	"/",
-	//	"",
-	//	false,
-	//	false,
-	//)
 }

@@ -109,6 +109,7 @@ func (database *Database) GetAllFilms() (films []*tmdb.Film, err error) {
 		films = append(films, film)
 		return nil
 	}); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	return films, nil

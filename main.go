@@ -42,6 +42,7 @@ func init() {
 
 func main() {
 	//go updateFilmsDatabase(false)
+	//go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
