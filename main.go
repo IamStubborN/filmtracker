@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"sync"
+	"time"
 
 	"github.com/IamStubborN/filmtracker/youtube"
 
@@ -34,7 +35,7 @@ var toreentsClub = &scrapper.FilmTracker{
 var wg = &sync.WaitGroup{}
 
 func main() {
-	go updateFilmsDatabase(false)
+	go updateFilmsDatabase(true)
 	go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
@@ -58,4 +59,7 @@ func updateFilmsDatabase(isFullUpdate bool) {
 		go sc.GetAllMovies(tracker, isFullUpdate)
 	}
 	wg.Wait()
+	for range time.NewTicker(time.Duration(3 * time.Hour)).C {
+		updateFilmsDatabase(false)
+	}
 }
