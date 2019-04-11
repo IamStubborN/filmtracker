@@ -5,12 +5,11 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/google/uuid"
 
 	"golang.org/x/crypto/bcrypt"
-
-	"github.com/IamStubborN/filmtracker/jwtmanager"
 
 	"github.com/IamStubborN/filmtracker/tmdb"
 	"gopkg.in/mgo.v2/bson"
@@ -41,14 +40,20 @@ type (
 )
 
 var database *Database
-var jmg *jwtmanager.JwtManager
 var mdb *tmdb.MovieDB
 
 func init() {
+	mongoDBDialInfo := &mgo.DialInfo{
+		Addrs:    []string{os.Getenv("MONGO_HOST")},
+		Timeout:  60 * time.Second,
+		Database: os.Getenv("DB_NAME"),
+		Username: os.Getenv("ROOT_USER"),
+		Password: os.Getenv("ROOT_PASSWORD"),
+	}
+
 	database = &Database{}
-	jmg = jwtmanager.GetJWTManager()
 	mdb = tmdb.GetMovieDB()
-	session, err := mgo.Dial(os.Getenv("MONGO_HOST"))
+	session, err := mgo.DialWithInfo(mongoDBDialInfo)
 	if err != nil {
 		panic(err)
 	}
