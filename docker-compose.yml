@@ -26,7 +26,7 @@ services:
       - .env
 
   filmtracker-web:
-    build: database/dockerfile
+    build: filmtracker-web/dockerfile
     restart: always
     ports:
       - 80:80
