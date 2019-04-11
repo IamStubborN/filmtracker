@@ -5,13 +5,14 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./data/db/:/data/db:Z
+      - /home/data/:/data/db:Z
     env_file:
       - .env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${DB_NAME}
+    command: mongod --auth
 
   filmtracker:
     build: .
@@ -26,7 +27,7 @@ services:
       - .env
 
   filmtracker-web:
-    build: filmtracker-web/dockerfile
+    build: filmtracker-web/
     restart: always
     ports:
       - 80:80

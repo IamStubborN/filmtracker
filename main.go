@@ -7,8 +7,6 @@ import (
 	"github.com/IamStubborN/filmtracker/gsrv"
 
 	"github.com/IamStubborN/filmtracker/scrapper"
-
-	"github.com/joho/godotenv"
 )
 
 var newTorrent = &scrapper.FilmTracker{
@@ -32,13 +30,6 @@ var toreentsClub = &scrapper.FilmTracker{
 }
 
 var wg = &sync.WaitGroup{}
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("File .env not found, reading configuration from ENV")
-	}
-}
 
 func main() {
 	//go updateFilmsDatabase(false)

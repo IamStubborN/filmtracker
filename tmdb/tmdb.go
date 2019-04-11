@@ -2,9 +2,12 @@ package tmdb
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/joho/godotenv"
 
 	"github.com/ryanbradynd05/go-tmdb"
 )
@@ -44,6 +47,10 @@ const posterBaseURL = "http://image.tmdb.org/t/p/w500"
 var movieDB *MovieDB
 
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("File .env not found, reading configuration from ENV")
+	}
 
 	mdb := new(MovieDB)
 	config := tmdb.Config{

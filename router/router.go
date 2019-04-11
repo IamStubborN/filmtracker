@@ -12,7 +12,7 @@ func CreateRouter() *gin.Engine {
 		gin.Recovery(),
 		middlewares.XSSMiddle(),
 		cors.New(cors.Config{
-			AllowOrigins:     []string{"http://localhost:3000"},
+			AllowOrigins:     []string{"http://localhost"},
 			AllowHeaders:     []string{"Accept", "Content-Type"},
 			AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 			AllowCredentials: true,
