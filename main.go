@@ -5,6 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/IamStubborN/filmtracker/youtube"
+
 	"github.com/IamStubborN/filmtracker/gsrv"
 
 	"github.com/IamStubborN/filmtracker/scrapper"
@@ -51,8 +53,8 @@ var toreentsClub = &scrapper.FilmTracker{
 var wg = &sync.WaitGroup{}
 
 func main() {
-	//go updateFilmsDatabase(false)
-	//go youtube.StartSearchTrailers()
+	go updateFilmsDatabase(false)
+	go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
