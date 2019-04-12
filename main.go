@@ -49,7 +49,7 @@ var wg = &sync.WaitGroup{}
 // @host petstore.swagger.io
 // @BasePath /v2
 func main() {
-	//go updateFilmsDatabase(true)
+	go updateFilmsDatabase(false)
 	//go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
