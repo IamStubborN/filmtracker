@@ -11,7 +11,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:5555",
+    "host": "filmtracker-api.com",
     "basePath": "{{.BasePath}}",
     "paths": {
         "/users/auth/signout/": {

@@ -1,5 +1,5 @@
 basePath: '{{.BasePath}}'
-host: localhost:5555
+host: filmtracker-api.com
 info:
   contact: {}
   description: DITS test FilmTracker project.
