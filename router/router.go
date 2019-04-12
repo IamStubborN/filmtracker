@@ -12,7 +12,11 @@ func CreateRouter() *gin.Engine {
 		gin.Recovery(),
 		middlewares.XSSMiddle(),
 		cors.New(cors.Config{
-			AllowOrigins:     []string{"http://filmtracker-api.com"},
+			AllowOrigins: []string{
+				"http://filmtracker-api.com",
+				"http://localhost",
+				"http://localhost:3000",
+			},
 			AllowHeaders:     []string{"Accept", "Content-Type"},
 			AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 			AllowCredentials: true,
