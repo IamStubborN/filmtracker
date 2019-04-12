@@ -108,6 +108,11 @@ func (mdb *MovieDB) CreateMovieFromName(name string) (*Film, error) {
 			}
 		}
 	}
+	if len(film.Genres) == 0 {
+		g := []*Genre{{ID: 0, EnglishName: "No Genre", RussianName: "Без жанра"}}
+		film.Genres = g
+	}
+
 	return film, nil
 }
 

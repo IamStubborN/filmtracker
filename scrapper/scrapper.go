@@ -63,12 +63,6 @@ func CreateScrapper(allowedDomains []string, isUseProxy bool) (*Scrapper, error)
 		colly.AllowedDomains("rutor.info"),
 	)
 
-	//supportCollector := colly.NewCollector(
-	//	colly.AllowedDomains("www.proxy-list.download", "www.ua-tracker.com"),
-	//	colly.DetectCharset(),
-	//	colly.AllowURLRevisit(),
-	//)
-
 	scrapper.mainCollector.SetRequestTimeout(30 * time.Second)
 	scrapper.tmdbCollector = scrapper.mainCollector.Clone()
 
