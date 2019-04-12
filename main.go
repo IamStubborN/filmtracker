@@ -5,12 +5,30 @@ import (
 	"sync"
 	"time"
 
+	"github.com/IamStubborN/filmtracker/youtube"
+
 	"github.com/IamStubborN/filmtracker/gsrv"
 
 	"github.com/IamStubborN/filmtracker/scrapper"
 
 	_ "github.com/IamStubborN/filmtracker/docs"
 )
+
+// @title FilmTracker API
+// @version 1.0
+// @description DITS test FilmTracker project.
+// @termsOfService http://swagger.io/terms/
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:5555
+
+// @securityDefinitions.apiKey Token
+// @in cookies
+// @name Token
+
+// @securityDefinitions.apiKey Refresh
+// @in cookies
+// @name Refresh
 
 var newTorrent = &scrapper.FilmTracker{
 	URL:            "http://newtorrent.org/",
@@ -34,23 +52,9 @@ var toreentsClub = &scrapper.FilmTracker{
 
 var wg = &sync.WaitGroup{}
 
-// @title Swagger Example API
-// @version 1.0
-// @description This is a sample server Petstore server.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host petstore.swagger.io
-// @BasePath /v2
 func main() {
-	//go updateFilmsDatabase(false)
-	//go youtube.StartSearchTrailers()
+	go updateFilmsDatabase(false)
+	go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)

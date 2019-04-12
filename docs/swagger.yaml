@@ -1,16 +1,13 @@
-basePath: /v2
-host: petstore.swagger.io
+basePath: '{{.BasePath}}'
+host: localhost:5555
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
-  description: This is a sample server Petstore server.
+  contact: {}
+  description: DITS test FilmTracker project.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
+  title: FilmTracker API
   version: "1.0"
 paths:
   /testapi/get-string-by-int/{some_id}:
@@ -55,4 +52,32 @@ paths:
           description: ok
           schema:
             type: string
+  /users/auth/signout/:
+    get:
+      consumes:
+      - application/json
+      description: Sign Out from server, delete cookies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"success":"Sign Out"}'
+          schema:
+            type: string
+        "406":
+          description: '{"error":"http: named cookie not present"}'
+          schema:
+            type: string
+      summary: Sign Out
+      tags:
+      - users
+securityDefinitions:
+  Refresh:
+    in: cookies
+    name: Refresh
+    type: apiKey
+  Token:
+    in: cookies
+    name: Token
+    type: apiKey
 swagger: "2.0"

@@ -95,14 +95,6 @@ func DeleteFilm(c *gin.Context) {
 	}
 }
 
-//@Description get struct array by ID
-//@Accept  json
-//@Produce  json
-//@Param   some_id     path    string     true        "Some ID"
-//@Param   offset     query    int     true        "Offset"
-//@Param   limit      query    int     true        "Offset"
-//@Success 200 {string} string	"ok"
-//@Router /testapi/get-struct-array-by-string/{some_id} [get]
 func FetchSingleFilm(c *gin.Context) {
 	if id, ok := c.Params.Get("id"); ok {
 		film, err := db.GetFilmByID(id)
@@ -122,13 +114,6 @@ func FetchAllFilms(c *gin.Context) {
 	c.JSON(http.StatusOK, films)
 }
 
-//
-// @Summary Add a new pet to the store
-// @Description get string by ID
-// @Accept  json
-// @Produce  json
-// @Param   some_id     path    int     true        "Some ID"
-// @Router /testapi/get-string-by-int/{some_id} [get]
 func StartPage(c *gin.Context) {
 	filmsCount, err := db.GetCountFromCollection("films")
 	if err != nil {

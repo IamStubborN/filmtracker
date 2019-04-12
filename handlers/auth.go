@@ -12,15 +12,24 @@ import (
 var jmg = jwtmanager.GetJWTManager()
 var db = database.GetDB()
 
+// SignOut godoc
+// @Summary Sign Out
+// @Description Sign Out from server, delete cookies
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} string "{"success":"Sign Out"}"
+// @Failure 406 {string} string "{"error":"http: named cookie not present"}"
+// @Router /users/auth/signout/ [get]
 func SignOut(c *gin.Context) {
 	accessToken, err := c.Request.Cookie("Token")
 	if err != nil {
-		RespondWithError(c, http.StatusNotAcceptable, err)
+		RespondWithError(c, http.StatusNotAcceptable, err.Error())
 		return
 	}
 	refreshToken, err := c.Request.Cookie("Refresh")
 	if err != nil {
-		RespondWithError(c, http.StatusNotAcceptable, err)
+		RespondWithError(c, http.StatusNotAcceptable, err.Error())
 		return
 	}
 	jmg.AddTokenToBlackList(accessToken.Value)
