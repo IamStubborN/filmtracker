@@ -3,9 +3,8 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/IamStubborN/filmtracker/handlers"
-
 	"github.com/IamStubborN/filmtracker/database"
+	"github.com/IamStubborN/filmtracker/handlers"
 	"github.com/IamStubborN/filmtracker/jwtmanager"
 
 	"github.com/dgrijalva/jwt-go"

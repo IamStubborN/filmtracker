@@ -18,7 +18,6 @@ func FetchFilmsFilter(c *gin.Context) {
 	genreQuery := sanitize.Name(c.Query("genre"))
 	yearQuery := sanitize.Name(c.Query("year"))
 	pageQuery := sanitize.Name(c.Query("page"))
-
 	films, err := db.GetFilmsByQuery(nameQuery, genreQuery, yearQuery, pageQuery)
 	if err != nil {
 		RespondWithError(c, http.StatusBadRequest, err.Error())

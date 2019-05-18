@@ -1,6 +1,8 @@
 package router
 
 import (
+	"os"
+
 	"github.com/IamStubborN/filmtracker/middlewares"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -15,10 +17,10 @@ func CreateRouter() *gin.Engine {
 		middlewares.XSSMiddle(),
 		cors.New(cors.Config{
 			AllowOrigins: []string{
-				"http://filmtracker-api.com",
-				"http://localhost",
-				"http://localhost:3000",
-				"http://localhost:5555",
+				os.Getenv("ORIGIN"),
+				os.Getenv("DEV_ORIGIN_1"),
+				os.Getenv("DEV_ORIGIN_2"),
+				os.Getenv("DEV_ORIGIN_3"),
 			},
 			AllowHeaders:     []string{"Accept", "Content-Type"},
 			AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},

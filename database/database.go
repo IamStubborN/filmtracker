@@ -7,14 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
-
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/IamStubborN/filmtracker/tmdb"
-	"gopkg.in/mgo.v2/bson"
-
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type (

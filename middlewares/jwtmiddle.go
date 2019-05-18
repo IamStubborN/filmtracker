@@ -9,16 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//func JWTMiddleware1() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		accessTokenCookie, err := c.Cookie("Token")
-//		if err != nil {
-//			accessTokenCookie = ""
-//		}
-//
-//	}
-//}
-
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		accessTokenCookie, err := c.Cookie("Token")
