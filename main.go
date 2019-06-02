@@ -18,7 +18,7 @@ import (
 // @termsOfService http://swagger.io/terms/
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:5555
+// @host filmtracker-api.com:5555
 
 // @securityDefinitions.apiKey Token
 // @in cookies
