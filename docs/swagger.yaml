@@ -76,7 +76,7 @@ definitions:
         example: боевик
         type: string
     type: object
-host: localhost:5555
+host: filmtracker-api.com:5555
 info:
   contact: {}
   description: DITS test FilmTracker project.
