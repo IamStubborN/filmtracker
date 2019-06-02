@@ -52,7 +52,7 @@ var toreentsClub = &scrapper.FilmTracker{
 var wg = &sync.WaitGroup{}
 
 func main() {
-	go updateFilmsDatabase(false)
+	go updateFilmsDatabase(true)
 	go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
