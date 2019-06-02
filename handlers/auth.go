@@ -18,8 +18,8 @@ var db = database.GetDB()
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {string} string "{"success":"Sign Out"}"
-// @Failure 406 {string} string "{"error":"http: named cookie not present"}"
+// @Success 200 "{"success":"Sign Out"}"
+// @Failure 406 "{"error":"http: named cookie not present"/"wrong refresh token"}"
 // @Router /users/auth/signout/ [get]
 func SignOut(c *gin.Context) {
 	accessToken, err := c.Request.Cookie("Token")
@@ -41,6 +41,18 @@ func SignOut(c *gin.Context) {
 	RespondWithSuccess(c, http.StatusOK, "Sign out")
 }
 
+// SignIn godoc
+// @Summary Sign In
+// @Description Sign In into server, add cookies
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param Login body database.User false "Add login and password"
+// @Success 200 "{"success":"Sign In"}"
+// @Header 200 {string} Token "JWT Token"
+// @Header 200 {string} Refresh "JWT refresh Token"
+// @Failure 406 "{"error":"this user isn't in the database."}"
+// @Router /users/auth/signin/ [post]
 func SignIn(c *gin.Context) {
 	if c.Request.Method == "OPTIONS" {
 		c.AbortWithStatus(http.StatusNoContent)
@@ -87,6 +99,18 @@ func SignIn(c *gin.Context) {
 	}
 }
 
+// SignUp godoc
+// @Summary Sign Up
+// @Description Sign Up into server, add cookies
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param Login body database.User false "Add login and password"
+// @Header 200 {string} Token "JWT Token"
+// @Header 200 {string} Refresh "JWT refresh Token"
+// @Success 200 "{"success":"Sign Up"}"
+// @Failure 406 "{"error":"this user is already exist in database."}"
+// @Router /users/auth/signup/ [post]
 func SignUp(c *gin.Context) {
 	if c.Request.Method == "OPTIONS" {
 		c.AbortWithStatus(http.StatusNoContent)

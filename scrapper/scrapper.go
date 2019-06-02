@@ -240,6 +240,10 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 		if err != nil {
 			return
 		}
+		filmFromDB, err := db.GetFilmByID(strconv.Itoa(film.ID))
+		if err == nil {
+			film.YoutubeID = filmFromDB.YoutubeID
+		}
 		releaseYear = strings.Split(film.ReleaseDate, "-")[0]
 		torURL := "http://rutor.info/search/0/0/000/0/" + film.Name
 		scrapper.visitWithRetry(scrapper.torrentCollector, torURL, 30)
@@ -250,7 +254,6 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 	})
 
 	re := regexp.MustCompile("TS|BDRip|HDRip|BDRemux|UHD|DVD|WEB")
-	reWebTorrent := regexp.MustCompile("WEB|HDRip")
 	scrapper.torrentCollector.OnHTML("#index tbody tr", func(e *colly.HTMLElement) {
 		name := e.Text
 		if strings.Contains(strings.ToLower(name), strings.ToLower(film.Name)) &&
@@ -260,9 +263,6 @@ func (scrapper *Scrapper) getDetailsAboutMovies(URLs []string, filmNameSelector 
 			name := strings.TrimSpace(a.Text())
 			link := a.Get(1).Attr[0].Val
 			film.MagnetLinks[name] = link
-			if film.WebTorrentMagnet == "" && reWebTorrent.MatchString(name) {
-				film.WebTorrentMagnet = link
-			}
 		}
 	})
 	scrapper.torrentCollector.OnScraped(func(response *colly.Response) {

@@ -22,10 +22,16 @@ type (
 
 	User struct {
 		UserID       string `bson:"user_id" json:"user_id"`
-		Login        string `bson:"login" json:"login" validate:"min=3, max=10"`
-		Password     string `bson:"password" json:"password" validate:"min=2, max=40"`
+		Login        string `bson:"login" json:"login" validate:"min=3, max=10" example:"login" binding:"required"`
+		Password     string `bson:"password" json:"password" validate:"min=2, max=40" example:"password" binding:"required"`
 		Role         string `bson:"role" json:"role"`
 		RefreshToken string `bson:"refresh_token" json:"refresh_token"`
+	}
+
+	Overview struct {
+		Name       string `json:"film_tracker" example:"FilmTracker"`
+		FilmsCount int    `json:"films_count" example:"1100"`
+		UsersCount int    `json:"users_count" example:"52"`
 	}
 
 	filter struct {
@@ -111,7 +117,6 @@ func (database *Database) GetAllFilms() (films []*tmdb.Film, err error) {
 		films = append(films, film)
 		return nil
 	}); err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 	return films, nil

@@ -11,9 +11,392 @@
         },
         "version": "1.0"
     },
-    "host": "filmtracker-api.com",
+    "host": "localhost:5555",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token": []
+                    },
+                    {
+                        "ApiKeyAuth Refresh": []
+                    }
+                ],
+                "description": "Api overview",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Api overview",
+                "responses": {
+                    "200": {
+                        "description": "Return films and user count",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/database.Overview"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error\": \"can't fetch from db films\"}"
+                    }
+                }
+            }
+        },
+        "/api/v1/films/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token": []
+                    },
+                    {
+                        "ApiKeyAuth Refresh": []
+                    }
+                ],
+                "description": "Get all films",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Get all films",
+                "responses": {
+                    "200": {
+                        "description": "Return all films",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmdb.Film"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error\": \"can't fetch from db films\"}"
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token": []
+                    },
+                    {
+                        "ApiKeyAuth Refresh": []
+                    }
+                ],
+                "description": "Update film by ID\n\"Only with user role = 'admin'\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Update film by json body",
+                "parameters": [
+                    {
+                        "description": "Update the film by fields",
+                        "name": "Film",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/tmdb.Film"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"ok\": \"film successful updated with that ID ___\"}"
+                    },
+                    "400": {
+                        "description": "{\"error\": \"film isn't exist with that ID ___\"}"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token": []
+                    },
+                    {
+                        "ApiKeyAuth Refresh": []
+                    }
+                ],
+                "description": "Add film json body\n\"Only with user role = 'admin'\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Add film by json body",
+                "parameters": [
+                    {
+                        "description": "Added the film by fields",
+                        "name": "Film",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/tmdb.Film"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"ok\": \"film successful added with that ID ___\"}"
+                    },
+                    "400": {
+                        "description": "{\"error\": \"film is exist with that ___\"}"
+                    }
+                }
+            }
+        },
+        "/api/v1/films/film/{ID}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token": []
+                    },
+                    {
+                        "ApiKeyAuth Refresh": []
+                    }
+                ],
+                "description": "Get single film by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Get single film by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Get single film by ID",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return single film by ID",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/tmdb.Film"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error\": \"film ID doesn't exist in database: ____\"}"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token": []
+                    },
+                    {
+                        "ApiKeyAuth Refresh": []
+                    }
+                ],
+                "description": "Delete film by ID\n\"Only with user role = 'admin'\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Delete film by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Delete film by ID",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"ok\": \"film with ID ___ deleted\"}"
+                    },
+                    "400": {
+                        "description": "{\"error\": \"film ID doesn't exist in database: ___\"}"
+                    }
+                }
+            }
+        },
+        "/api/v1/films/filter": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token, Refresh": []
+                    }
+                ],
+                "description": "Filter films by name or/and genre, year, page",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Filter films",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Film name",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Film year production",
+                        "name": "year",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Film genre",
+                        "name": "genre",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Film page of the results",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return slice of films with filter",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmdb.Film"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error\": \"no films matches\"}"
+                    }
+                }
+            }
+        },
+        "/api/v1/films/page/{ID}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth Token, Refresh": []
+                    }
+                ],
+                "description": "Filter films page",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Fetch by page films",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Film page of the results",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return slice of films with filter",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tmdb.Film"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error\": \"no films matches\"/\"bad page request\"/ \"invalid page number\"}"
+                    }
+                }
+            }
+        },
+        "/users/auth/signin/": {
+            "post": {
+                "description": "Sign In into server, add cookies",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Sign In",
+                "parameters": [
+                    {
+                        "description": "Add login and password",
+                        "name": "Login",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/database.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":\"Sign In\"}",
+                        "headers": {
+                            "Refresh": {
+                                "type": "string",
+                                "description": "JWT refresh Token"
+                            },
+                            "Token": {
+                                "type": "string",
+                                "description": "JWT Token"
+                            }
+                        }
+                    },
+                    "406": {
+                        "description": "{\"error\":\"this user isn't in the database.\"}"
+                    }
+                }
+            }
+        },
         "/users/auth/signout/": {
             "get": {
                 "description": "Sign Out from server, delete cookies",
@@ -29,17 +412,150 @@
                 "summary": "Sign Out",
                 "responses": {
                     "200": {
-                        "description": "{\"success\":\"Sign Out\"}",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": "{\"success\":\"Sign Out\"}"
                     },
                     "406": {
-                        "description": "{\"error\":\"http: named cookie not present\"}",
+                        "description": "{\"error\":\"http: named cookie not present\"/\"wrong refresh token\"}"
+                    }
+                }
+            }
+        },
+        "/users/auth/signup/": {
+            "post": {
+                "description": "Sign Up into server, add cookies",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Sign Up",
+                "parameters": [
+                    {
+                        "description": "Add login and password",
+                        "name": "Login",
+                        "in": "body",
                         "schema": {
-                            "type": "string"
+                            "type": "object",
+                            "$ref": "#/definitions/database.User"
                         }
                     }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":\"Sign Up\"}"
+                    },
+                    "406": {
+                        "description": "{\"error\":\"this user is already exist in database.\"}"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "database.Overview": {
+            "type": "object",
+            "properties": {
+                "film_tracker": {
+                    "type": "string",
+                    "example": "FilmTracker"
+                },
+                "films_count": {
+                    "type": "integer",
+                    "example": 1100
+                },
+                "users_count": {
+                    "type": "integer",
+                    "example": 52
+                }
+            }
+        },
+        "database.User": {
+            "type": "object",
+            "required": [
+                "login",
+                "password"
+            ],
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "example": "login"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "tmdb.Film": {
+            "type": "object",
+            "properties": {
+                "added_date": {
+                    "type": "string",
+                    "example": "2019-06-02 19:01:10"
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tmdb.Genre"
+                    }
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 299534
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Мстители: Финал"
+                },
+                "original_name": {
+                    "type": "string",
+                    "example": "Avengers: Endgame"
+                },
+                "overview": {
+                    "type": "string",
+                    "example": "Мстители и Стражи Галактики вступают в последнюю стадию войны с Таносом, владеющим всемогущей Перчаткой Бесконечности. Грядёт финальная битва между силами героев и Безумного Титана, которая раз и навсегда определит дальнейшую судьбу не только Земли, но и всей вселенной."
+                },
+                "poster_path": {
+                    "type": "string",
+                    "example": "http://image.tmdb.org/t/p/w500/4fjlSFUoW6L9FSAE5knxjjUDd6v.jpg"
+                },
+                "release_date": {
+                    "type": "string",
+                    "example": "2019-04-24"
+                },
+                "youtube_id": {
+                    "type": "string",
+                    "example": "https://www.youtube.com/watch?v=gbcVZgO4n4E"
+                }
+            }
+        },
+        "tmdb.Genre": {
+            "type": "object",
+            "properties": {
+                "english_name": {
+                    "type": "string",
+                    "example": "action"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 28
+                },
+                "russian_name": {
+                    "type": "string",
+                    "example": "боевик"
                 }
             }
         }

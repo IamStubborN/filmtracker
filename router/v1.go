@@ -11,7 +11,7 @@ func AddV1RouterGroup(router *gin.Engine) {
 	v1.Use(
 		middlewares.JWTMiddleware(),
 	)
-	v1.GET("/", handlers.StartPage)
+	v1.GET("/", handlers.ApiOverview)
 	v1.GET("films/", handlers.FetchAllFilms)
 	v1.GET("films/filter", handlers.FetchFilmsFilter)
 	v1.POST("films/", middlewares.AccessMiddleware(), handlers.AddFilm)

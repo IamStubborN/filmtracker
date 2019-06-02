@@ -5,8 +5,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/IamStubborN/filmtracker/youtube"
-
 	"github.com/IamStubborN/filmtracker/gsrv"
 
 	"github.com/IamStubborN/filmtracker/scrapper"
@@ -20,7 +18,7 @@ import (
 // @termsOfService http://swagger.io/terms/
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host filmtracker-api.com
+// @host localhost:5555
 
 // @securityDefinitions.apiKey Token
 // @in cookies
@@ -53,8 +51,8 @@ var toreentsClub = &scrapper.FilmTracker{
 var wg = &sync.WaitGroup{}
 
 func main() {
-	go updateFilmsDatabase(false)
-	go youtube.StartSearchTrailers()
+	// go updateFilmsDatabase(false)
+	// go youtube.StartSearchTrailers()
 	server := gsrv.CreateServer()
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
@@ -66,6 +64,14 @@ func updateFilmsDatabase(isFullUpdate bool) {
 		newTorrent,
 		toreentsClub,
 	}
+	updateFromTrackers(listTrackers, isFullUpdate)
+	wg.Wait()
+	for range time.NewTicker(time.Duration(3 * time.Hour)).C {
+		updateFromTrackers(listTrackers, false)
+	}
+}
+
+func updateFromTrackers(listTrackers []*scrapper.FilmTracker, isFullUpdate bool) {
 	for _, tracker := range listTrackers {
 		wg.Add(1)
 		sc, err := scrapper.CreateScrapper([]string{
@@ -75,9 +81,5 @@ func updateFilmsDatabase(isFullUpdate bool) {
 			log.Fatal(err)
 		}
 		go sc.GetAllMovies(tracker, isFullUpdate)
-	}
-	wg.Wait()
-	for range time.NewTicker(time.Duration(3 * time.Hour)).C {
-		updateFilmsDatabase(false)
 	}
 }

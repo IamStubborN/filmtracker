@@ -21,23 +21,22 @@ type (
 	}
 	// Film is response struct.
 	Film struct {
-		ID               int               `bson:"id" json:"id"`
-		Name             string            `bson:"name" json:"name"`
-		OriginalName     string            `bson:"original_name" json:"original_name"`
-		Poster           string            `bson:"poster_path" json:"poster_path"`
-		ReleaseDate      string            `bson:"release_date" json:"release_date"`
-		Genres           []*Genre          `bson:"genres" json:"genres"`
-		Overview         string            `bson:"overview" json:"overview"`
-		AddedDate        string            `bson:"added_date" json:"added_date"`
-		YoutubeID        string            `bson:"youtube_id" json:"youtube_id"`
-		WebTorrentMagnet string            `bson:"webtorrent_magnet" json:"webtorrent_magnet"`
-		MagnetLinks      map[string]string `bson:"magnet_links" json:"magnet_links"`
+		ID           int               `bson:"id" json:"id" example:"299534"`
+		Name         string            `bson:"name" json:"name" example:"Мстители: Финал"`
+		OriginalName string            `bson:"original_name" json:"original_name" example:"Avengers: Endgame"`
+		Poster       string            `bson:"poster_path" json:"poster_path" example:"http://image.tmdb.org/t/p/w500/4fjlSFUoW6L9FSAE5knxjjUDd6v.jpg"`
+		ReleaseDate  string            `bson:"release_date" json:"release_date" example:"2019-04-24"`
+		Genres       []*Genre          `bson:"genres" json:"genres"`
+		Overview     string            `bson:"overview" json:"overview" example:"Мстители и Стражи Галактики вступают в последнюю стадию войны с Таносом, владеющим всемогущей Перчаткой Бесконечности. Грядёт финальная битва между силами героев и Безумного Титана, которая раз и навсегда определит дальнейшую судьбу не только Земли, но и всей вселенной."`
+		AddedDate    string            `bson:"added_date" json:"added_date" example:"2019-06-02 19:01:10"`
+		YoutubeID    string            `bson:"youtube_id" json:"youtube_id" example:"https://www.youtube.com/watch?v=gbcVZgO4n4E"`
+		MagnetLinks  map[string]string `bson:"magnet_links" json:"magnet_links" example:"[magnet:?xt=urn:btih:855dca1c13fbca4eca6b701555a13d32ea065dbb&dn=rutor.info&tr=udp://opentor.org:2710&tr=udp://opentor.org:2710&tr=http://retracker.local/announce]"`
 	}
 	// Genre struct is overview of all genres from tmdb.
 	Genre struct {
-		ID          int    `bson:"id" json:"id"`
-		EnglishName string `bson:"english_name" json:"english_name"`
-		RussianName string `bson:"russian_name" json:"russian_name"`
+		ID          int    `bson:"id" json:"id" example:"28"`
+		EnglishName string `bson:"english_name" json:"english_name" example:"action"`
+		RussianName string `bson:"russian_name" json:"russian_name" example:"боевик"`
 	}
 )
 

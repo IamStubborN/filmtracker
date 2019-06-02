@@ -1,5 +1,82 @@
 basePath: '{{.BasePath}}'
-host: filmtracker-api.com
+definitions:
+  database.Overview:
+    properties:
+      film_tracker:
+        example: FilmTracker
+        type: string
+      films_count:
+        example: 1100
+        type: integer
+      users_count:
+        example: 52
+        type: integer
+    type: object
+  database.User:
+    properties:
+      login:
+        example: login
+        type: string
+      password:
+        example: password
+        type: string
+      refresh_token:
+        type: string
+      role:
+        type: string
+      user_id:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  tmdb.Film:
+    properties:
+      added_date:
+        example: "2019-06-02 19:01:10"
+        type: string
+      genres:
+        items:
+          $ref: '#/definitions/tmdb.Genre'
+        type: array
+      id:
+        example: 299534
+        type: integer
+      name:
+        example: 'Мстители: Финал'
+        type: string
+      original_name:
+        example: 'Avengers: Endgame'
+        type: string
+      overview:
+        example: Мстители и Стражи Галактики вступают в последнюю стадию войны с Таносом,
+          владеющим всемогущей Перчаткой Бесконечности. Грядёт финальная битва между
+          силами героев и Безумного Титана, которая раз и навсегда определит дальнейшую
+          судьбу не только Земли, но и всей вселенной.
+        type: string
+      poster_path:
+        example: http://image.tmdb.org/t/p/w500/4fjlSFUoW6L9FSAE5knxjjUDd6v.jpg
+        type: string
+      release_date:
+        example: "2019-04-24"
+        type: string
+      youtube_id:
+        example: https://www.youtube.com/watch?v=gbcVZgO4n4E
+        type: string
+    type: object
+  tmdb.Genre:
+    properties:
+      english_name:
+        example: action
+        type: string
+      id:
+        example: 28
+        type: integer
+      russian_name:
+        example: боевик
+        type: string
+    type: object
+host: localhost:5555
 info:
   contact: {}
   description: DITS test FilmTracker project.
@@ -10,6 +87,250 @@ info:
   title: FilmTracker API
   version: "1.0"
 paths:
+  /api/v1/:
+    get:
+      consumes:
+      - application/json
+      description: Api overview
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return films and user count
+          schema:
+            $ref: '#/definitions/database.Overview'
+            type: object
+        "400":
+          description: '{"error": "can''t fetch from db films"}'
+      security:
+      - ApiKeyAuth Token: []
+      - ApiKeyAuth Refresh: []
+      summary: Api overview
+      tags:
+      - api
+  /api/v1/films/:
+    get:
+      consumes:
+      - application/json
+      description: Get all films
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return all films
+          schema:
+            items:
+              $ref: '#/definitions/tmdb.Film'
+            type: array
+        "400":
+          description: '{"error": "can''t fetch from db films"}'
+      security:
+      - ApiKeyAuth Token: []
+      - ApiKeyAuth Refresh: []
+      summary: Get all films
+      tags:
+      - api
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Add film json body
+        "Only with user role = 'admin'"
+      parameters:
+      - description: Added the film by fields
+        in: body
+        name: Film
+        required: true
+        schema:
+          $ref: '#/definitions/tmdb.Film'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"ok": "film successful added with that ID ___"}'
+        "400":
+          description: '{"error": "film is exist with that ___"}'
+      security:
+      - ApiKeyAuth Token: []
+      - ApiKeyAuth Refresh: []
+      summary: Add film by json body
+      tags:
+      - api
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Update film by ID
+        "Only with user role = 'admin'"
+      parameters:
+      - description: Update the film by fields
+        in: body
+        name: Film
+        required: true
+        schema:
+          $ref: '#/definitions/tmdb.Film'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"ok": "film successful updated with that ID ___"}'
+        "400":
+          description: '{"error": "film isn''t exist with that ID ___"}'
+      security:
+      - ApiKeyAuth Token: []
+      - ApiKeyAuth Refresh: []
+      summary: Update film by json body
+      tags:
+      - api
+  /api/v1/films/film/{ID}:
+    delete:
+      consumes:
+      - application/json
+      description: |-
+        Delete film by ID
+        "Only with user role = 'admin'"
+      parameters:
+      - description: Delete film by ID
+        in: path
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"ok": "film with ID ___ deleted"}'
+        "400":
+          description: '{"error": "film ID doesn''t exist in database: ___"}'
+      security:
+      - ApiKeyAuth Token: []
+      - ApiKeyAuth Refresh: []
+      summary: Delete film by ID
+      tags:
+      - api
+    get:
+      consumes:
+      - application/json
+      description: Get single film by ID
+      parameters:
+      - description: Get single film by ID
+        in: path
+        name: ID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return single film by ID
+          schema:
+            $ref: '#/definitions/tmdb.Film'
+            type: object
+        "400":
+          description: '{"error": "film ID doesn''t exist in database: ____"}'
+      security:
+      - ApiKeyAuth Token: []
+      - ApiKeyAuth Refresh: []
+      summary: Get single film by ID
+      tags:
+      - api
+  /api/v1/films/filter:
+    get:
+      consumes:
+      - application/json
+      description: Filter films by name or/and genre, year, page
+      parameters:
+      - description: Film name
+        in: query
+        name: name
+        type: string
+      - description: Film year production
+        in: query
+        name: year
+        type: string
+      - description: Film genre
+        in: query
+        name: genre
+        type: string
+      - description: Film page of the results
+        in: query
+        name: page
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return slice of films with filter
+          schema:
+            items:
+              $ref: '#/definitions/tmdb.Film'
+            type: array
+        "400":
+          description: '{"error": "no films matches"}'
+      security:
+      - ApiKeyAuth Token, Refresh: []
+      summary: Filter films
+      tags:
+      - api
+  /api/v1/films/page/{ID}:
+    get:
+      consumes:
+      - application/json
+      description: Filter films page
+      parameters:
+      - description: Film page of the results
+        in: path
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return slice of films with filter
+          schema:
+            items:
+              $ref: '#/definitions/tmdb.Film'
+            type: array
+        "400":
+          description: '{"error": "no films matches"/"bad page request"/ "invalid
+            page number"}'
+      security:
+      - ApiKeyAuth Token, Refresh: []
+      summary: Fetch by page films
+      tags:
+      - api
+  /users/auth/signin/:
+    post:
+      consumes:
+      - application/json
+      description: Sign In into server, add cookies
+      parameters:
+      - description: Add login and password
+        in: body
+        name: Login
+        schema:
+          $ref: '#/definitions/database.User'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"success":"Sign In"}'
+          headers:
+            Refresh:
+              description: JWT refresh Token
+              type: string
+            Token:
+              description: JWT Token
+              type: string
+        "406":
+          description: '{"error":"this user isn''t in the database."}'
+      summary: Sign In
+      tags:
+      - users
   /users/auth/signout/:
     get:
       consumes:
@@ -20,13 +341,31 @@ paths:
       responses:
         "200":
           description: '{"success":"Sign Out"}'
-          schema:
-            type: string
         "406":
-          description: '{"error":"http: named cookie not present"}'
-          schema:
-            type: string
+          description: '{"error":"http: named cookie not present"/"wrong refresh token"}'
       summary: Sign Out
+      tags:
+      - users
+  /users/auth/signup/:
+    post:
+      consumes:
+      - application/json
+      description: Sign Up into server, add cookies
+      parameters:
+      - description: Add login and password
+        in: body
+        name: Login
+        schema:
+          $ref: '#/definitions/database.User'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"success":"Sign Up"}'
+        "406":
+          description: '{"error":"this user is already exist in database."}'
+      summary: Sign Up
       tags:
       - users
 securityDefinitions:
